@@ -40,6 +40,10 @@ public class ObservadorEstacionDeServicio extends Observable implements Runnable
                 double b97 = inSocket.readDouble();
                 double disel = inSocket.readDouble();
                 double kerosene = inSocket.readDouble();
+                System.out.println("DESDE EL SURTIDOR....");
+                System.out.println("El precio de la 93: " + b93);
+                
+                
                 Precio precios = new Precio(b93,b95,b97,disel,kerosene);
                 this.setChanged();
                 this.notifyObservers(precios);
@@ -49,6 +53,16 @@ public class ObservadorEstacionDeServicio extends Observable implements Runnable
             Logger.getLogger(ObservadorEstacionDeServicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public int getPuerto() {
+        return puerto;
+    }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
+    
+    
 
 
     
