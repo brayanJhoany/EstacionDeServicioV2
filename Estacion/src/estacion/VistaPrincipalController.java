@@ -6,6 +6,8 @@
 package estacion;
 
 
+import Surtidores.Surtidor;
+import Surtidores.VistaSurtidorController;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -25,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 /**
  * FXML Controller class
@@ -44,8 +47,10 @@ public class VistaPrincipalController implements Initializable,Observer {
     private Button cambiarPreciosBtn;
     @FXML
     private Button crearSurtidorBtn;
-    
+    Precio precioAux;
+    ArrayList<Surtidores.Surtidor>surtidores;
     public VistaPrincipalController() {
+        this.surtidores =new ArrayList<Surtidores.Surtidor>();
         this.idSurtidorTextField= new TextField();
         this.puertoSurtidorTextField = new TextField();
         this.infoPreciosTextArea = new TextArea();
@@ -80,7 +85,8 @@ public class VistaPrincipalController implements Initializable,Observer {
             String kerosen = "5. precio vencina kerosen: "+ precio.getKerosene()+"\n";
             String texto = precio93 + precio95+precio97+disel+kerosen;
             this.infoPreciosTextArea.appendText(texto);
-            //enviarListaDePreciosASurtidores(precio);
+            enviarListaDePreciosASurtidores(precio);
+            this.precioAux=precio;
             
 
         }else{
@@ -90,6 +96,9 @@ public class VistaPrincipalController implements Initializable,Observer {
 
     @FXML
     private void cambiarPrecios(ActionEvent event) {
+        System.out.println("Se intenta actualizar  los precios.");
+        System.out.println("Precio 93: "+this.precioAux.getB93());
+         enviarListaDePreciosASurtidores(this.precioAux);
     }
 
     @FXML
@@ -98,33 +107,59 @@ public class VistaPrincipalController implements Initializable,Observer {
         if(this.idSurtidorTextField.getText() != null && this.puertoSurtidorTextField.getText() != null){
             String idSurt=this.idSurtidorTextField.getText();
             int puerto = Integer.parseInt(this.puertoSurtidorTextField.getText());
-            System.out.println("id surtidor: " + idSurt);
-            System.out.println("Puerto: " + puerto);
+            //System.out.println("id surtidor: " + idSurt);
+            //System.out.println("Puerto: " + puerto);
             
-            abrirVistaSurtidor();
+            abrirVistaSurtidor(idSurt,puerto);
+            Surtidores.Surtidor surtidor = new Surtidor(Integer.parseInt(idSurt), puerto);
+            this.surtidores.add(surtidor);
         }
         
        
     }
     
-    public void abrirVistaSurtidor() throws IOException{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Surtidores/VistaSurtidor.fxml"));
-        Parent root1 = (Parent) fxmlLoader.load();
+    public void abrirVistaSurtidor(String idSurtidor, int puerto) throws IOException{
+       
+       // VistaSurtidorController dialogController = new VistaSurtidorController(idSurtidor, puerto);
+        FXMLLoader loader = new FXMLLoader( getClass().getResource( "/Surtidores/VistaSurtidor.fxml"));
+
+        //fxmlLoader.setController(dialogController);
+        //fxmlLoader.setLocation(VistaSurtidorController.class.getResource("/Surtidores/VistaSurtidor.fxml"));
+        Parent root1 = (Parent) loader.load();
         Stage stage = new Stage();
         stage.setTitle("Nuevo Surtidor");
         stage.setScene(new Scene(root1));
+        
+        VistaSurtidorController controller = loader.<VistaSurtidorController>getController();
+        controller.initData(idSurtidor,puerto);
+
+        
+        
         stage.setResizable(false);
         stage.show();
+        
+       
+      
+       
+
+
     }
+    
+    
+    
+
 
     public void enviarPrecioAlSuertidor(String idSurtidor, int puerto){
         
     }
-    /*
+    
     private void enviarListaDePreciosASurtidores(Precio p) {
         String ip = "localhost";
         for (int i = 0; i < this.surtidores.size(); i++) {
-            try (Socket ss = new Socket(ip, this.surtidores.get(i).getPuerto())) {
+            try (
+                Socket ss = new Socket(ip, this.surtidores.get(i).getPuerto())) {
+                System.out.println("Se enviaran los datos: "+ this.surtidores.get(i).getPuerto());
+                System.out.println("El precio 93: " + p.getB93() );
                 DataOutputStream out = new DataOutputStream(ss.getOutputStream());
                 out.writeDouble(p.getB93());
                 out.writeDouble(p.getB95());
@@ -136,5 +171,6 @@ public class VistaPrincipalController implements Initializable,Observer {
             }
         }
     }
-    */
+    
 }
+
