@@ -16,7 +16,7 @@ import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Servidor extends Observable implements Runnable {
+public class Servidor extends Observable implements Runnable{
 
     private DataInputStream entrada;
     private final int puerto;
