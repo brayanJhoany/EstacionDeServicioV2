@@ -49,12 +49,23 @@ public class VistaPrincipalController implements Initializable,Observer {
     private Button crearSurtidorBtn;
     Precio precioAux;
     ArrayList<Surtidores.Surtidor>surtidores;
+    private Thread hiloEscuchandoSurtidores;
+    
     public VistaPrincipalController() {
         this.surtidores =new ArrayList<Surtidores.Surtidor>();
         this.idSurtidorTextField= new TextField();
         this.puertoSurtidorTextField = new TextField();
         this.infoPreciosTextArea = new TextArea();
-        this.identificadorSucursal=1;
+        //this.identificadorSucursal=1;
+        //surtidores
+        ObservarSurtidor observarSurtidor = new ObservarSurtidor(10012);
+         observarSurtidor.addObserver(this);
+        hiloEscuchandoSurtidores = new Thread(observarSurtidor);
+        hiloEscuchandoSurtidores.start();
+        
+        
+        
+        //Estacion de servicio
         Servidor s = new Servidor(5000,this);
         s.addObserver(this);
         Thread t = new Thread(s);
@@ -113,6 +124,7 @@ public class VistaPrincipalController implements Initializable,Observer {
             abrirVistaSurtidor(idSurt,puerto);
             Surtidores.Surtidor surtidor = new Surtidor(Integer.parseInt(idSurt), puerto);
             this.surtidores.add(surtidor);
+            enviarListaDePreciosASurtidores(this.precioAux);
         }
         
        
