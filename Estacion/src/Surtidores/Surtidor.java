@@ -32,8 +32,4 @@ public class Surtidor {
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
-    
-    
-    
-    
 }

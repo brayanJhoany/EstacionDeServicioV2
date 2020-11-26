@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author braya
  */
 public class ObservadorEstacionDeServicio extends Observable implements Runnable{
-     private int puerto;
+    private int puerto;
     private DataInputStream dis;
     private DataOutputStream out;
     
@@ -61,9 +61,4 @@ public class ObservadorEstacionDeServicio extends Observable implements Runnable
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
-    
-    
-
-
-    
 }
